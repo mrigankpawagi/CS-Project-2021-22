@@ -14,7 +14,10 @@ def display(data=None):
     ])
 
 def search():
-    pass
+    pin, branch = tool.form([
+        ('Your Pincode', '\d{6}'), 
+        ('Medical Department', '')
+    ])
 
 def records():
     pass

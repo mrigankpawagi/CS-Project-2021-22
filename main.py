@@ -52,7 +52,6 @@ def patientSignIn():
             signedInData = data[0]
             patient.display(signedInData)     
 
-
 def adminSignUp():
     global signedInData
     name, address, pincode, phone, description, passw = tool.form([
