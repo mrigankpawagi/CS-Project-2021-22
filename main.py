@@ -16,6 +16,7 @@ def doctorMenu():
 
 def exit():
     print("Thank you for using MediSmart!")
+    quit()
 
 def patientSignUp():
     global signedInData
@@ -30,47 +31,27 @@ def patientSignUp():
     print("Patient ID: ", signedInData[0])
     print("Your password is: ", signedInData[1])
 
-    patient.display()    
+    patient.display(signedInData)    
 
 def patientSignIn():
-        # print("-----Welcome to Patient Sign IN-----")
-        # print()
-        # pid=int(input("Enter Patient ID: "))
-        # pa=input("Enter password: ")
-        # myc.execute("use patients")
-        # myc.execute("select * from profile where patient_id='"+str(pid)+"'")
-        # result=myc.fetchone()
-        # if result==None:
-        #     print("Patient does not exist")
-        # else:
-        #     myc.execute("select ppass,pname from profile where patient_id='"+str(pid)+"'")
-        #     pr=myc.fetchone()
-        #     if pa==pr[0]:
-        #         print("Logged in successfully")
-        #         print()
-        #         print("----- Welcome",pr[1],"-----")
-        #         while True:
-        #             print()
-        #             print("1: Appointment Booking")
-        #             print("2: Appointment Cancellation")
-        #             print("3: View Lab Reports")
-        #             print("4: View Medical History")
-        #             print("5: Go to private forum")
-        #             print("6: Search for a nearby hospital")
-        #             print("7: Ask Queries")
-        #             print("8: EXIT")
-        #             ch1=input("Enter your choice: ")
-        #             if ch1=="5":
-        #                 forum()
-        #             if ch1=="6":
-        #                 search_hospital()
-        #             if ch1=="7":
-        #                 query()
-        #             if ch1=="8":
-        #                 break
-        #     else:
-        #         print("Invalid password")
-        pass
+    global signedInData
+    id, passw = tool.form([
+        ('Patient ID', ''), 
+        ('Password', '')
+    ])
+    data = tool.getQuery("patient", "patients", "*", "WHERE id='{}'".format(id))
+    if len(data) == 0:
+        print("\nIncorrect Patient ID. Please try again.")
+        patientSignIn()
+    else:
+        if passw != data[0][1]:
+            print("\nIncorrect Password. Please try again.")
+            patientSignIn()
+        else:
+            print("\nLogged in successfully.")
+            signedInData = data[0]
+            patient.display(signedInData)     
+
 
 def adminSignUp():
     global signedInData
@@ -114,6 +95,7 @@ def doctorSignIn():
 
 def main():
     tool.menu('Welcome to MediSmart!', [('Continue as Patient', patientMenu), ('Continue as Administrator', adminMenu), ('Continue as Doctor', doctorMenu), ('Exit', exit)])
+    main()
 
 tool.init()
 main()

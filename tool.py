@@ -3,6 +3,7 @@ import regex as re
 import random 
 import string
 from prettytable import PrettyTable
+
 import logging
 
 def init():
@@ -118,6 +119,14 @@ def updateQuery(db: str, table: str, fields: dict, cond: str):
     con.close()
     return
 
+def deleteQuery(db: str, table: str, cond: str):
+    con = sql.connect(db + '.db')
+    cur = con.cursor()
+    cur.execute('DELETE FROM ' + table + " WHERE " + cond + ";")
+    con.commit()
+    con.close()
+    return
+
 def randstr(n: int):
     return ''.join(random.choices(string.digits + string.ascii_letters, k = n))
 
@@ -131,3 +140,6 @@ def printTable(T: list, labels: dict):
             row.append(r[i])    
         t.add_row(row)
     print(t)
+
+def logout():
+    return
