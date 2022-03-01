@@ -90,7 +90,23 @@ def adminSignIn():
             admin.display(signedInData)
 
 def doctorSignIn():
-    pass
+    global signedInData
+    id, passw = tool.form([
+        ('Doctor ID', ''), 
+        ('Password', '')
+    ])
+    data = tool.getQuery("admin", "doctors", "*", "WHERE id='{}'".format(id))
+    if len(data) == 0:
+        print("\nIncorrect Doctor ID. Please try again.")
+        doctorSignIn()
+    else:
+        if passw != data[0][1]:
+            print("\nIncorrect Password. Please try again.")
+            doctorSignIn()
+        else:
+            print("\nLogged in successfully.")
+            signedInData = data[0]
+            doctor.display(signedInData)
 
 def main():
     tool.menu('Welcome to MediSmart!', [('Continue as Patient', patientMenu), ('Continue as Administrator', adminMenu), ('Continue as Doctor', doctorMenu), ('Exit', exit)])

@@ -51,12 +51,22 @@ def records():
     pass
 
 def forum():
-    pass
-    # CODE FOR ASKING QUESTION =>
-    #  query, = tool.form([("Ask your question", '')])
-    # tool.writeQuery("admin", "forum", "patientid, question", "'" + "', '".join([str(signedInData[0]), query]) + "'")
-    # print("Question posted successfully.")
-    # display()
+    res = tool.getQuery('admin', 'forum', 'question, answer, docid', 'WHERE patientid = "{}"'.format(signedInData[0]))
+    
+    for r in res:
+        tool.printItem('Unanswered' if r[2] == None else 'Answered', {
+            ('Question: ' + r[0]): ('Answer: ' + str(r[1]))
+        })
+    tool.menu('', [
+        ("Ask a question", forumAsk),
+        ("Return", display)
+    ])
+
+def forumAsk(): 
+    query, = tool.form([("Ask your question", '')])
+    tool.writeQuery("admin", "forum", "patientid, question", "'" + "', '".join([str(signedInData[0]), query]) + "'")
+    print("Question posted successfully.")
+    forum()
 
 def bookSlot():
     id, = tool.form([("Slot ID", '\d*')])

@@ -1,5 +1,6 @@
 from datetime import datetime
 import tool
+from commons import *
 
 signedInData = None
 docs = None
@@ -31,9 +32,6 @@ def doclist():
 
 
 def account():
-    pass
-
-def patientSearch():
     pass
 
 def messages():
