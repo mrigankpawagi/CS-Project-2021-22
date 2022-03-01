@@ -1,6 +1,8 @@
 import sqlite3 as sql
-from typing import List, Tuple
 import regex as re
+import random 
+import string
+from prettytable import PrettyTable
 import logging
 
 def init():
@@ -107,4 +109,25 @@ def writeQuery(db: str, table: str, cols: str, values: str):
     r = cur.fetchone()
     con.close()
     return r[0]
-    
+
+def updateQuery(db: str, table: str, fields: dict, cond: str):
+    con = sql.connect(db + '.db')
+    cur = con.cursor()
+    cur.execute('UPDATE ' + table + ' SET ' + ", ".join(["{} = '{}'".format(k, v) for k,v in fields.items()]) + " WHERE " + cond + ";")
+    con.commit()
+    con.close()
+    return
+
+def randstr(n: int):
+    return ''.join(random.choices(string.digits + string.ascii_letters, k = n))
+
+def printTable(T: list, labels: dict):
+    # labels: dict((index: header))
+    head = list(labels.values())   
+    t = PrettyTable(head)
+    for r in T:
+        row = []
+        for i in labels:
+            row.append(r[i])    
+        t.add_row(row)
+    print(t)

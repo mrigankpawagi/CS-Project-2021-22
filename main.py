@@ -88,7 +88,7 @@ def adminSignUp():
     print("Hospital ID: ", signedInData[0])
     print("Your password is: ", signedInData[1])
     
-    admin.display()
+    admin.display(signedInData)
 
 def adminSignIn():
     global signedInData
@@ -107,7 +107,7 @@ def adminSignIn():
         else:
             print("\nLogged in successfully.")
             signedInData = data[0]
-            admin.display()
+            admin.display(signedInData)
 
 def doctorSignIn():
     pass
