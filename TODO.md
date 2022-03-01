@@ -1,0 +1,1 @@
+- Remove Logging from tool.py
