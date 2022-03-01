@@ -1,1 +1,2 @@
 - Remove Logging from tool.py
+- Persistent Login
