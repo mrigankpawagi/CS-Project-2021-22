@@ -11,6 +11,25 @@ def init():
     con = sql.connect('admin.db')
     cur = con.cursor()
     
+    # Create Queries Table    
+    cur.execute('''CREATE TABLE IF NOT EXISTS queries(
+                        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                        patientid TEXT,
+                        hospitalid TEXT,
+                        slotid TEXT,
+                        question TEXT,
+                        answer TEXT 
+                    );''')
+
+    # Create Forum Table    
+    cur.execute('''CREATE TABLE IF NOT EXISTS forum(
+                        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                        patientid TEXT,
+                        docid TEXT,
+                        question TEXT,
+                        answer TEXT 
+                    );''')
+
     # Create Doctors table
     cur.execute('''CREATE TABLE IF NOT EXISTS doctors(
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -140,6 +159,12 @@ def printTable(T: list, labels: dict):
             row.append(r[i])    
         t.add_row(row)
     print(t)
+
+def printItem(title: str, data: dict):
+    # data = dict(header: value)
+    x = PrettyTable(list(data.keys()))
+    x.add_row(list(data.values()))
+    print(x.get_string(title=title))
 
 def logout():
     return
