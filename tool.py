@@ -166,5 +166,14 @@ def printItem(title: str, data: dict):
     x.add_row(list(data.values()))
     print(x.get_string(title=title))
 
+def insertblob(id: int, path: str):
+    con = sql.connect("admin.db")
+    cur = con.cursor()
+    with open(path, "rb") as file:
+        data = file.read()
+        t = "update slots set presfile = (?) where id = "+ str(id)
+    cur.execute(t, (data,))
+    con.commit()
+
 def logout():
     return
