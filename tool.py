@@ -3,8 +3,9 @@ import regex as re
 import random 
 import string
 from prettytable import PrettyTable
-
+import webbrowser
 import logging
+import base64
 
 def init():
     # Admin Database
@@ -169,11 +170,34 @@ def printItem(title: str, data: dict):
 def insertblob(id: int, path: str):
     con = sql.connect("admin.db")
     cur = con.cursor()
-    with open(path, "rb") as file:
-        data = file.read()
+    with open(path, 'rb') as binary_file:
+        binary_file_data = binary_file.read()
+        base64_encoded_data = base64.b64encode(binary_file_data)
+        base64_message = base64_encoded_data.decode('utf-8')
         t = "update slots set presfile = (?) where id = "+ str(id)
-    cur.execute(t, (data,))
+    cur.execute(t, (base64_message,))
     con.commit()
+
+def getblob(id: int):
+    con = sql.connect("admin.db")
+    cur = con.cursor()
+    cur.execute("select presfile from slots where id = " + str(id))
+    bytesdata = cur.fetchone()
+    print(bytesdata)
+    string = ""
+    for i in bytesdata:
+        string = string + i
+    if len(string) == 0:
+        print("No prescription to show")
+    else:
+        base = string.encode('utf-8')
+        rand = random.randint(1, 1000)
+        with open("Prescription" + str(id) + ".pdf", 'wb') as file:
+            decodeddata = base64.decodebytes(base)
+            file.write(decodeddata)
+        webbrowser.open_new("Prescription" + str(id) + ".pdf")
+
+getblob(1)
 
 def logout():
     return
