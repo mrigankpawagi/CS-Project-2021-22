@@ -123,10 +123,12 @@ def closeslot():
         if slots[[S[0] for S in slots].index(int(id))][15] == "Closed": 
             print("Closed slots cannot be closed again.")
         else:
+            name = input("Enter prescription name: ")
+            tool.updateQuery("admin", "slots", {"presfilename":name}, 'id = "{}"'.format(id))
             c = input("How do you want to upload the prescription?\n1. Text\n2. File\n")
             if c == "1":
                 pres = input("Enter closing prescription: ")
-                tool.updateQuery("admin", "slots", {"prestext":pres}, 'id = "{}"'.format(id))
+                tool.updateQuery("admin", "slots", {"prestext":pres}, 'id = "{}"'.format(id)) 
             elif c == "2":
                 pres = input("Enter file path: ")
                 tool.insertblob(id, pres)
@@ -144,8 +146,10 @@ def gethistory():
                 print("Start time:", S[5])
                 print("End time:", S[6])
                 if S[7] == None:
+                    print("Prescription name:", S[8])
                     tool.getblob(id)
                 else:
+                    print("Prescription name:", S[8])
                     print("Prescription:", S[7])
                 print()
                 
