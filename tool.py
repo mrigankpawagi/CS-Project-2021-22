@@ -174,7 +174,7 @@ def insertblob(id: int, path: str):
         binary_file_data = binary_file.read()
         base64_encoded_data = base64.b64encode(binary_file_data)
         base64_message = base64_encoded_data.decode('utf-8')
-        t = "update slots set presfile = (?) where id = "+ str(id)
+        t = "update slots set presfile = (?) where id = " + str(id)
     cur.execute(t, (base64_message,))
     con.commit()
 
