@@ -131,9 +131,9 @@ def closeslot():
                 pres = input("Enter file path: ")
                 tool.insertblob(id, pres)
 
-def gethistory(id: int):
+def gethistory():
     global slots
-    id = tool.form([("Patient ID",'\d*')])
+    id = input("Patient ID: ")
     if int(id) not in [S[3] for S in slots]:
         print("No medical history to show")
         gethistory()
@@ -144,11 +144,11 @@ def gethistory(id: int):
                 print("Start time:", S[5])
                 print("End time:", S[6])
                 if S[7] == None:
-                    pass
+                    tool.getblob(id)
                 else:
                     print("Prescription:", S[7])
                 print()
-
+                
 def delSlot():
     id, = tool.form("Slot ID", '\d*')
     if int(id) not in [S[0] for S in slots]:
