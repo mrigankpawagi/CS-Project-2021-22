@@ -181,23 +181,23 @@ def insertblob(id: int, path: str):
 def getblob(id: int):
     con = sql.connect("admin.db")
     cur = con.cursor()
-    cur.execute("select presfile from slots where id = " + str(id))
+    cur.execute("select id, presfile from slots where patientid = " + str(id))
     bytesdata = cur.fetchone()
-    print(bytesdata)
-    string = ""
-    for i in bytesdata:
-        string = string + i
-    if len(string) == 0:
+    if bytesdata == None:
         print("No prescription to show")
     else:
+        string = ""
+        for i in bytesdata[1]:
+            string = string + i
+        sid = bytesdata[0]
         base = string.encode('utf-8')
         rand = random.randint(1, 1000)
-        with open("Prescription" + str(id) + ".pdf", 'wb') as file:
+        with open("Prescription" + str(sid) + ".pdf", 'wb') as file:
             decodeddata = base64.decodebytes(base)
             file.write(decodeddata)
-        webbrowser.open_new("Prescription" + str(id) + ".pdf")
+        webbrowser.open_new("Prescription" + str(sid) + ".pdf")
 
-getblob(1)
+#getblob(8)
 
 def logout():
     return
