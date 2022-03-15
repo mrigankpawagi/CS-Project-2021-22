@@ -15,7 +15,6 @@ def display(data=None):
         signedInData = data
     tool.menu("\n\nWelcome to the Doctor Portal for {}!".format(signedInData[3]), [
         ("Appointments", appointments),
-        ("Close appointment", closeslot),
         ("Patient Search", patientSearch),
         ("Forum", forum),
         ("Logout", tool.logout)
@@ -37,11 +36,14 @@ def forum():
 
 def closeslot():
     global slots
-    id = input("Slot ID: ")
+    id = tool.form([("Slot ID",'\d*')])
     if int(id) not in [S[0] for S in slots]:
         print("Incorrect ID. Please try again.")
         closeslot()
     else:
+        if slots[[S[0] for S in slots].index(int(id))][15] == "Closed": 
+            print("Closed slots cannot be closed again.")
+        else:
             name = input("Enter prescription name: ")
             tool.updateQuery("admin", "slots", {"presfilename":name}, 'id = "{}"'.format(id))
             c = input("How do you want to upload the prescription?\n1. Text\n2. File\n")
