@@ -178,10 +178,10 @@ def insertblob(id: int, path: str):
     cur.execute(t, (base64_message,))
     con.commit()
 
-def getblob(id: int, date: str):
+def getblob(id: int):
     con = sql.connect("admin.db")
     cur = con.cursor()
-    cur.execute("select id, presfile from slots where (patientid, date = (?), (?))", (str(id), str(date)))
+    cur.execute("select id, presfile from slots where patientid = " + str(id))
     bytesdata = cur.fetchone()
     if bytesdata == None:
         print("No prescription to show")
