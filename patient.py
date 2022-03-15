@@ -1,9 +1,14 @@
 from datetime import datetime
 import sqlite3 as sql
 import tool
+from prettytable import PrettyTable
 
 signedInData = None
-slots = None
+
+con = sql.connect("admin.db")
+cur = con.cursor()
+cur.execute("select * from slots")
+slots = cur.fetchall()
 
 def display(data=None):
     global signedInData
@@ -13,8 +18,9 @@ def display(data=None):
         ("Search for Doctors", search),
         ("Appointments and Records", records),
         ("Forum", forum),
-        ("Inquiries", inquirylist),
+        ("Inquiries", inquire),
         ("Update account details", updateaccount),
+        ("View medical history", gethistory),
         ("Logout", tool.logout)
     ])
     
@@ -48,9 +54,6 @@ def search():
         ("Send inquiry to a hospital", inquire),
         ("Return", display)
     ])     
-
-def records():
-    pass
 
 def forum():
     res = tool.getQuery('admin', 'forum', 'question, answer, docid', 'WHERE patientid = "{}"'.format(signedInData[0]))
@@ -90,9 +93,29 @@ def inquire():
         tool.writeQuery("admin", "queries", "patientid, hospitalid, slotid, question", "'" + "', '".join([str(signedInData[0]), str(slots[[S[0] for S in slots].index(int(id))][15]), id, query]) + "'")
         print("Inquiry sent successfully.")
         display()
-    
-def inquirylist():
-    pass
+
+def gethistory():
+    global slots
+    id = input("Patient ID: ")
+    if int(id) not in [S[3] for S in slots]:
+        print("No medical history to show")
+        gethistory()
+    else:
+        for S in slots:
+            if S[3] == int(id):
+                print("Date:", S[4])
+                print("Start time:", S[5])
+                print("End time:", S[6])
+                if S[9] == None and S[7] == None:
+                    print("No prescription to show. Try again after some time")
+                if S[9] != None:
+                    print("Prescription name:", S[8])
+                    tool.getblob(id)
+                elif S[7] != None:
+                    print("Prescription name:", S[8])
+                    print("Prescription:", S[7])
+                print()
+    display()
 
 def updateaccount():
     con = sql.connect("patient.db")
@@ -123,4 +146,15 @@ def updateaccount():
             con.commit()
         elif c == "4":
             display()
+
+def records():
+    global slots
+    cur.execute("select * from slots where patientid = " + str(signedInData[0]))
+    res = cur.fetchall()
+    pt = PrettyTable()
+    pt.field_names = (["Slot ID", "Date", "Start", "End", "Doctor ID", "Hospital ID"])
+    for i in res:
+        pt.add_row([i[0], i[4], i[5], i[6], i[1], i[2]])
+    print(pt, "\n")
+    display()
 #display([8, "112233", "Mrig", "1234599999"])
