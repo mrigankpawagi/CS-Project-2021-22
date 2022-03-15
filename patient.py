@@ -14,6 +14,7 @@ def display(data=None):
         ("Appointments and Records", records),
         ("Forum", forum),
         ("Inquiries", inquirylist),
+        ("Update account details", updateaccount),
         ("Logout", tool.logout)
     ])
     
@@ -104,21 +105,22 @@ def updateaccount():
     if len(res) == 0:
         print("Invalid ID. Please try again.")
         updateaccount()
-    elif passw != res[1]:
+    elif passw != res[0]:
         print("Invalid password. Please try again.")
     else:
-        c = input("What do you want to change?\n1. Password\n2. Name\n3. Contact number\n")
-        if c == 1:
+        c = input("\nWhat do you want to change?\n1. Password\n2. Name\n3. Contact number\n4. Return\n\nSelect one of the options above to continue: ")
+        if c == "1":
             npass = input("Enter new password: ")
             cur.execute("update patients set password = (?) where id = " + str(pid), (npass,))
-        elif c == 2:
+            con.commit()
+        elif c == "2":
             nname = input("Enter new profile name: ")
             cur.execute("update patients set name = (?) where id = " + str(pid), (nname,))
-        elif c == 3:
+            con.commit()
+        elif c == "3":
             nphone = input("Enter new contact: ")
-            cur.execute("update patients set phone = (?) where id = " + str(pid), (nphone,))
-        else:
-            print("Invalid choice. Try again.")
-            updateaccount()
-        
+            cur.execute(("update patients set phone = (?) where id = " + str(pid)), (nphone,))
+            con.commit()
+        elif c == "4":
+            display()
 #display([8, "112233", "Mrig", "1234599999"])
