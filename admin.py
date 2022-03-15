@@ -5,6 +5,7 @@ from commons import *
 signedInData = None
 docs = None
 slots = None
+queries = []
 
 def display(data=None):
     global signedInData
@@ -29,8 +30,32 @@ def doclist():
         ("Return", display)
     ])
 
-def messages():
-    pass
+def messages():    
+    global queries
+    res = tool.getQuery('admin', 'queries', 'id, patientid, slotid, question', 'WHERE answer IS NULL AND hospitalid = {}'.format(str(signedInData[0])))
+    queries = res
+    for r in res:
+        tool.printItem('Unanswered Query [ID: ' + str(r[0]) + ']', {
+            (r[3]): ('Posted by Patient ' + str(r[1]) + ' for slot ' + str(r[2]))
+        })
+    tool.menu('', [
+        ("Answer a question", queryAns),
+        ("Return", display)
+    ])
+
+def queryAns():
+    id, = tool.form([("Query ID", '\d*')])
+    if int(id) not in [d[0] for d in queries]:
+        print("Incorrect ID. Please try again.")
+        queryAns()
+    else:
+        answer, = tool.form([
+            ('Your response', ''), 
+        ])
+        tool.updateQuery("admin", "queries", {'answer': answer}, 'id = "{}"'.format(id))
+        print("Response saved successfully.")
+
+        messages()
 
 def addDoc():
     name, branch = tool.form([
@@ -120,5 +145,3 @@ def delSlot():
             tool.deleteQuery("admin", "slots", 'id = "{}"'.format(id))
             print("Slot deleted successfully.")
         slotlist()
-
-#display([3, '123456', 'Yatharth Hospital', 'Sec-82, Noida',	201304, '9268121866', 'Best hospital in NCR'])
