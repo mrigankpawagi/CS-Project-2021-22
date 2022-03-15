@@ -1,4 +1,5 @@
 from datetime import datetime
+import sqlite3 as sql
 import tool
 
 signedInData = None
@@ -15,7 +16,7 @@ def display(data=None):
         ("Inquiries", inquirylist),
         ("Logout", tool.logout)
     ])
-
+    
 def search():
     global slots
     pin, branch = tool.form([
@@ -92,4 +93,32 @@ def inquire():
 def inquirylist():
     pass
 
+def updateaccount():
+    con = sql.connect("patient.db")
+    cur = con.cursor()
+    print("Please provide the following details:\n")
+    pid = int(input("Enter your ID: "))
+    passw = input("Enter your password: ")
+    cur.execute("select password from patients where id = " + str(pid))
+    res = cur.fetchone()
+    if len(res) == 0:
+        print("Invalid ID. Please try again.")
+        updateaccount()
+    elif passw != res[1]:
+        print("Invalid password. Please try again.")
+    else:
+        c = input("What do you want to change?\n1. Password\n2. Name\n3. Contact number\n")
+        if c == 1:
+            npass = input("Enter new password: ")
+            cur.execute("update patients set password = (?) where id = " + str(pid), (npass,))
+        elif c == 2:
+            nname = input("Enter new profile name: ")
+            cur.execute("update patients set name = (?) where id = " + str(pid), (nname,))
+        elif c == 3:
+            nphone = input("Enter new contact: ")
+            cur.execute("update patients set phone = (?) where id = " + str(pid), (nphone,))
+        else:
+            print("Invalid choice. Try again.")
+            updateaccount()
+        
 #display([8, "112233", "Mrig", "1234599999"])
