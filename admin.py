@@ -112,26 +112,6 @@ def addSlot():
     print("Slot created successfully with ID " + str(id) + ".\n")
     
     slotlist()
-
-def gethistory():
-    global slots
-    id = input("Patient ID: ")
-    if int(id) not in [S[3] for S in slots]:
-        print("No medical history to show")
-        gethistory()
-    else:
-        for S in slots:
-            if S[3] == int(id):
-                print("Date:", S[4])
-                print("Start time:", S[5])
-                print("End time:", S[6])
-                if S[7] == None:
-                    print("Prescription name:", S[8])
-                    tool.getblob(id)
-                else:
-                    print("Prescription name:", S[8])
-                    print("Prescription:", S[7])
-                print()
                 
 def delSlot():
     id, = tool.form("Slot ID", '\d*')
