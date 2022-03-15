@@ -1,7 +1,13 @@
 import tool
 from commons import *
+import sqlite3 as sql
 
 signedInData = None
+
+con = sql.connect("admin.db")
+cur = con.cursor()
+cur.execute("select * from slots")
+slots = cur.fetchall()
 
 def display(data=None):
     global signedInData
@@ -15,7 +21,15 @@ def display(data=None):
     ])
 
 def appointments():
-    pass
+    global slots
+    cur.execute("select * from slots where docid = " + str(signedInData[0]))
+    res = cur.fetchall()
+    pt = PrettyTable()
+    pt.field_names = (["Slot ID", "Date", "Start", "End", "Patient ID"])
+    for i in res:
+        pt.add_row([i[0], i[4], i[5], i[6], i[3]])
+    print(pt, "\n")
+    display()
 
 def forum():
     pass
