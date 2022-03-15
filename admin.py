@@ -12,7 +12,6 @@ def display(data=None):
         signedInData = data
     tool.menu("\n\nWelcome to the Administrator Portal for {}!".format(signedInData[2]), [
         ("Manage Doctors", doclist),
-        ("Manage Account", account),
         ("Patient Search", patientSearch),
         ("Messages", messages),
         ("Logout", tool.logout)
@@ -28,11 +27,7 @@ def doclist():
         ("Delete Doctor", delDoc),
         ("Manage Slots", slotlist),
         ("Return", display)
-    ]) 
-
-
-def account():
-    pass
+    ])
 
 def messages():
     pass
