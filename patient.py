@@ -97,6 +97,7 @@ def inquire():
 def gethistory():
     global slots
     id = input("Patient ID: ")
+    date = input("Date (dd-mm-yyyy): ")
     if int(id) not in [S[3] for S in slots]:
         print("No medical history to show")
         gethistory()
@@ -110,7 +111,7 @@ def gethistory():
                     print("No prescription to show. Try again after some time")
                 if S[9] != None:
                     print("Prescription name:", S[8])
-                    tool.getblob(id)
+                    tool.getblob(id, date)
                 elif S[7] != None:
                     print("Prescription name:", S[8])
                     print("Prescription:", S[7])
@@ -157,4 +158,3 @@ def records():
         pt.add_row([i[0], i[4], i[5], i[6], i[1], i[2]])
     print(pt, "\n")
     display()
-#display([8, "112233", "Mrig", "1234599999"])

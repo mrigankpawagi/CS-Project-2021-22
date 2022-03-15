@@ -4,7 +4,6 @@ import random
 import string
 from prettytable import PrettyTable
 import webbrowser
-import logging
 import base64
 
 def init():
@@ -94,7 +93,6 @@ def menu(init: str, items: list):
             items[res-1][1]() 
             break
         except Exception as e:
-            logging.exception("message")
             continue
     return
 
@@ -178,10 +176,10 @@ def insertblob(id: int, path: str):
     cur.execute(t, (base64_message,))
     con.commit()
 
-def getblob(id: int):
+def getblob(id: int, date: str):
     con = sql.connect("admin.db")
     cur = con.cursor()
-    cur.execute("select id, presfile from slots where patientid = " + str(id))
+    cur.execute("select id, presfile from slots where (patientid, date = (?), (?))", (str(id), str(date)))
     bytesdata = cur.fetchone()
     if bytesdata == None:
         print("No prescription to show")
@@ -196,8 +194,6 @@ def getblob(id: int):
             decodeddata = base64.decodebytes(base)
             file.write(decodeddata)
         webbrowser.open_new("Prescription" + str(sid) + ".pdf")
-
-#getblob(8)
 
 def logout():
     return
