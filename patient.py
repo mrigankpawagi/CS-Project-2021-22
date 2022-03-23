@@ -96,14 +96,13 @@ def inquire():
 
 def gethistory():
     global slots
-    id = input("Patient ID: ")
-    date = input("Date (dd-mm-yyyy): ")
-    if int(id) not in [S[3] for S in slots]:
+    id = input("Slot ID: ")
+    if int(id) not in [S[0] for S in slots]:
         print("No medical history to show")
         gethistory()
     else:
         for S in slots:
-            if S[3] == int(id):
+            if S[0] == int(id):
                 print("Date:", S[4])
                 print("Start time:", S[5])
                 print("End time:", S[6])
@@ -111,7 +110,7 @@ def gethistory():
                     print("No prescription to show. Try again after some time")
                 if S[9] != None:
                     print("Prescription name:", S[8])
-                    tool.getblob(id, date)
+                    tool.getblob(id)
                 elif S[7] != None:
                     print("Prescription name:", S[8])
                     print("Prescription:", S[7])
