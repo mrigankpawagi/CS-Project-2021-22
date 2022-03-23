@@ -1,6 +1,8 @@
 import sqlite3 as sql
 from prettytable import PrettyTable
 
+from patient import display
+
 def patientSearch():
     con = sql.connect("patient.db")
     cur = con.cursor()
@@ -22,5 +24,5 @@ def patientSearch():
         pt.field_names = (["Patient ID", "Name", "Contact"])
         pt.add_row([res[0], res[2], res[3]])
         print(pt, "\n")
-
+    
 
